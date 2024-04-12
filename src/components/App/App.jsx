@@ -1,3 +1,4 @@
+import { FeedbackHeading } from 'components/FeedbackHeading/FeedbackHeading';
 import { Container } from './App.styled';
 import { FeedbackOptions } from 'components/FeedbackOptions/FeedbackOptions';
 import { FeedbackStats } from 'components/FeedbackStats/FeedbackStats';
@@ -10,8 +11,7 @@ class App extends Component {
     bad: 0,
   };
 
-  handleClick = e => {
-    let option = e.target.textContent.toLowerCase();
+  handleClick = option => {
     this.setState(prevState => {
       return {
         [option]: prevState[option] + 1,
@@ -31,14 +31,20 @@ class App extends Component {
     return (
       <Container>
         <FeedbackOptions
+          text="Please leave feedback:"
           options={Object.keys(this.state)}
           onLeaveFeedback={this.handleClick}
         />
-        <FeedbackStats
-          obj={this.state}
-          totalFeedback={this.countTotalFeedback}
-          positivePercentage={this.countPositiveFeedbackPercentage}
-        />
+        {this.countTotalFeedback(this.state) > 0 ? (
+          <FeedbackStats
+            text="Statistics:"
+            obj={this.state}
+            totalFeedback={this.countTotalFeedback}
+            positivePercentage={this.countPositiveFeedbackPercentage}
+          />
+        ) : (
+          <FeedbackHeading size={'large'} text={'There is no feedback'} />
+        )}
       </Container>
     );
   }
